@@ -1,32 +1,41 @@
 def clean_heartrate_data(data: list) -> tuple:
     """
     Clean raw heart-rate data by removing malformed or impossible values.
+    loop over the data
+    if not valid, creat a new list
+    
+    clean_data = []
+    missing valuses = []
+    
+    for item in data:
+        if CONDITTION:
+           clean_data.append(item)
+        else:
+             miss_value.append(item)
+    return (clean_data, missing values)
     """
+    clean_data = []
+    miss_values = []
+        
+    for item in data:
+        value_str = str(item).strip()
+        if value_str.isdigit():
+           hr_value = int(value_str)
+           clean_data.append(hr_value)
+        else:
+            miss_values.append(item)
+    return (clean_data, miss_values)
     
-    cleaned_heartrate_data = []
-    skipped_count = 0
-    
-    for number in data:
-        try:
-            hr = int(number)
-            if 30 <= hr <= 220:
-                cleaned_heartrate_data.append(hr)
-            else:
-                skipped_count += 1
-        except ValueError:
-            skipped_count += 1
-            
-    return tuple(cleaned_heartrate_data), skipped_count
-
+       
 
 def average(data: list) -> float:
     """
     Calculate average of a list of integers using a for-loop. Assumes data is clean.
     """
-
-    total = 0
-    for value in data:
-        total += value
+    if not data:
+        return 0
+    
+    total = sum(data)
     average = total / len(data)
     return float(average)
 
@@ -85,12 +94,14 @@ def run(file: str):
         float, float, float: You will return the average, median, and range.
     """
     data = []
-
+    
     # open file using file I/O and read it into the `data` list
     
     file_object = open(file)
-
-    data = file_object.readlines()
+    for line in file_object:
+        data.append(line.strip())  
+    
+    
         
 
     # Use `clean_heartrate_data` to clean the data and remove invalid entries
@@ -106,8 +117,7 @@ def run(file: str):
     # print out your data quality measure to the console
     
     print("File:", file)
-    print("Skippend Rows:", removed_values)
-
+    print("Skipped", len(removed_values),"rows")
     # print out your descriptive statistics to the console
     
     print("Average:", average_hr, "Median:", median_hr, "Range:", range_hr)
